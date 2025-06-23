@@ -3,6 +3,7 @@ using ImageMagick;
 using YoutubeExplode;
 using YoutubeExplode.Common;
 using YoutubeExplode.Videos.Streams;
+using DwVideo.utils;
 
 namespace DwVideo
 {
@@ -22,8 +23,10 @@ namespace DwVideo
             });
 
             TagText = video.Title;
-            await youtube.Videos.Streams.DownloadAsync(streamInfo, Path.Combine(DownloadPath, $"{video.Title}.mp3"), progress);
+            await youtube.Videos.Streams.DownloadAsync(streamInfo, Path.Combine(download_path, $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp3"), progress);
         }
+
+        private string download_path;
 
         private async void LoadThumbnailAsync(string videoUrl)
         {
@@ -55,8 +58,8 @@ namespace DwVideo
         public Video(string url, string download_path)
         {
             InitializeComponent();
-            LoadThumbnailAsync(url);
             DownloadPath = download_path;
+            LoadThumbnailAsync(url);
         }
 
         [Category("Comportamiento")]
@@ -91,8 +94,8 @@ namespace DwVideo
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DownloadPath
         {
-            get => DownloadPath;
-            set => DownloadPath = value;
+            get => download_path;
+            set => download_path = value;
         }
     }
 }
