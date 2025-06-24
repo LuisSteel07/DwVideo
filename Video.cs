@@ -58,30 +58,25 @@ namespace DwVideo
                     progress
                     );
 
-                string argumentos = $"-i \"{Path.Combine(download_path, title_video)}\" -i \"{Path.Combine(download_path, title_audio)}\" -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 \"download_{Path.Combine(download_path, title_video)}\"";
+                var input_video = Path.Combine(download_path, title_video);
+                var input_audio = Path.Combine(download_path, title_audio);
+                var output = Path.Combine(download_path, $"output_{title_video}");
 
-                Thread convertion = new Thread(() =>
+                string argumentos = $"-i \"{input_video}\" -i \"{input_audio}\" -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 \"{output}\"";
+
+                var proceso = new System.Diagnostics.Process
                 {
-                    var proceso = new System.Diagnostics.Process
+                    StartInfo = new System.Diagnostics.ProcessStartInfo
                     {
-                        StartInfo = new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = rutaFFmpeg,
-                            Arguments = argumentos,
-                            RedirectStandardOutput = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = false
-                        }
-                    };
+                        FileName = rutaFFmpeg,
+                        Arguments = argumentos,
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
 
-                    proceso.Start();
-
-                    File.Delete(title_video);
-                    File.Delete(title_audio);
-                });
-
-                convertion.IsBackground = true;
-                convertion.Start();
+                proceso.Start();
             }
         }
 
