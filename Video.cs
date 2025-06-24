@@ -2,10 +2,8 @@
 using ImageMagick;
 using YoutubeExplode;
 using YoutubeExplode.Common;
-using YoutubeExplode.Converter;
 using YoutubeExplode.Videos.Streams;
 using DwVideo.utils;
-using System.Timers;
 
 namespace DwVideo
 {
@@ -48,6 +46,7 @@ namespace DwVideo
                 var title_audio = $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp3";
                 var title_video = $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp4";
 
+                PorcentLabel.Text = "Downloading Audio";
                 await youtube.Videos.Streams.DownloadAsync(
                     StreamManifest,
                     Path.Combine(download_path, title_audio)

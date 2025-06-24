@@ -48,7 +48,7 @@
             // 
             search_input.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
             search_input.Font = new Font("Segoe UI", 12F);
-            search_input.Location = new Point(498, 56);
+            search_input.Location = new Point(478, 56);
             search_input.Margin = new Padding(4, 5, 4, 5);
             search_input.Name = "search_input";
             search_input.Size = new Size(365, 39);
@@ -67,7 +67,7 @@
             TopPanel.Location = new Point(0, 35);
             TopPanel.Margin = new Padding(4, 5, 4, 5);
             TopPanel.Name = "TopPanel";
-            TopPanel.Size = new Size(1143, 132);
+            TopPanel.Size = new Size(1102, 132);
             TopPanel.TabIndex = 1;
             // 
             // label2
@@ -124,7 +124,7 @@
             // Search
             // 
             Search.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
-            Search.Location = new Point(874, 56);
+            Search.Location = new Point(854, 56);
             Search.Margin = new Padding(4, 5, 4, 5);
             Search.Name = "Search";
             Search.Size = new Size(107, 38);
@@ -140,7 +140,7 @@
             activities.Location = new Point(0, 167);
             activities.Margin = new Padding(4, 5, 4, 5);
             activities.Name = "activities";
-            activities.Size = new Size(1143, 583);
+            activities.Size = new Size(1102, 577);
             activities.TabIndex = 2;
             // 
             // menu
@@ -150,7 +150,7 @@
             menu.Location = new Point(0, 0);
             menu.Name = "menu";
             menu.Padding = new Padding(9, 3, 0, 3);
-            menu.Size = new Size(1143, 35);
+            menu.Size = new Size(1102, 35);
             menu.TabIndex = 3;
             menu.Text = "menuStrip1";
             // 
@@ -173,13 +173,17 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(10, 10, 64);
-            ClientSize = new Size(1143, 750);
+            ClientSize = new Size(1102, 744);
             Controls.Add(activities);
             Controls.Add(TopPanel);
             Controls.Add(menu);
             MainMenuStrip = menu;
             Margin = new Padding(4, 5, 4, 5);
+            MaximizeBox = false;
+            MaximumSize = new Size(1124, 800);
+            MinimumSize = new Size(1124, 800);
             Name = "Main";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "DwVideo";
             TopPanel.ResumeLayout(false);
             TopPanel.PerformLayout();

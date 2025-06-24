@@ -1,7 +1,4 @@
 using System.ComponentModel;
-using YoutubeExplode;
-using YoutubeExplode.Common;
-using YoutubeExplode.Videos;
 
 namespace DwVideo
 {
@@ -30,6 +27,7 @@ namespace DwVideo
                                 if (activities.Controls.Count > 0)
                                 {
                                     activities.Controls.RemoveAt(0);
+                                    Search.Enabled = true;
                                 }
                             }));
                         }
@@ -45,6 +43,7 @@ namespace DwVideo
 
         private void Search_Click(object sender, EventArgs e)
         {
+            Search.Enabled = false;
             if (search_input.Text != "")
             {
                 Video video_component = new Video(search_input.Text, DownloadPathControl, TypeOption.SelectedItem.ToString(), ResolutionOption.SelectedItem.ToString())
