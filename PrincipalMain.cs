@@ -11,6 +11,8 @@ namespace DwVideo
         {
             InitializeComponent();
             DownloadPathControl = "C:\\Users\\luisd\\Downloads";
+            TypeOption.SelectedIndex = 0;
+            ResolutionOption.SelectedIndex = 0;
         }
 
         private void confirm_download(Video video_component)
@@ -43,9 +45,9 @@ namespace DwVideo
 
         private void Search_Click(object sender, EventArgs e)
         {
-            if(search_input.Text != "")
+            if (search_input.Text != "")
             {
-                Video video_component = new Video(search_input.Text, DownloadPathControl)
+                Video video_component = new Video(search_input.Text, DownloadPathControl, TypeOption.SelectedItem.ToString(), ResolutionOption.SelectedItem.ToString())
                 {
                     TagText = search_input.Text,
                     DownloadPath = DownloadPathControl
@@ -54,7 +56,8 @@ namespace DwVideo
                 activities.Controls.Add(video_component);
                 confirm_download(video_component);
                 video_component.Download();
-            } else
+            }
+            else
             {
                 MessageBox.Show("Debe de colocar una url.", "Advertencia", MessageBoxButtons.OK);
             }
@@ -73,5 +76,17 @@ namespace DwVideo
         [Description("Establece o obtiene la ruta de descarga del video.")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string DownloadPathControl;
+
+        private void TypeOption_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(TypeOption.SelectedItem.ToString() == "Audio")
+            {
+                ResolutionOption.Enabled = false;
+            }
+            else
+            {
+                ResolutionOption.Enabled = true;
+            }
+        }
     }
 }

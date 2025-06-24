@@ -40,17 +40,19 @@
             Tag.AutoSize = true;
             Tag.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Tag.ForeColor = Color.White;
-            Tag.Location = new Point(190, 10);
+            Tag.Location = new Point(271, 17);
+            Tag.Margin = new Padding(4, 0, 4, 0);
             Tag.Name = "Tag";
-            Tag.Size = new Size(0, 28);
+            Tag.Size = new Size(0, 41);
             Tag.TabIndex = 0;
             // 
             // picture
             // 
             picture.BackColor = SystemColors.Control;
-            picture.Location = new Point(5, 5);
+            picture.Location = new Point(7, 8);
+            picture.Margin = new Padding(4, 5, 4, 5);
             picture.Name = "picture";
-            picture.Size = new Size(180, 140);
+            picture.Size = new Size(257, 233);
             picture.SizeMode = PictureBoxSizeMode.StretchImage;
             picture.TabIndex = 1;
             picture.TabStop = false;
@@ -58,9 +60,10 @@
             // progressBar
             // 
             progressBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            progressBar.Location = new Point(190, 120);
+            progressBar.Location = new Point(271, 200);
+            progressBar.Margin = new Padding(4, 5, 4, 5);
             progressBar.Name = "progressBar";
-            progressBar.Size = new Size(320, 23);
+            progressBar.Size = new Size(477, 38);
             progressBar.TabIndex = 2;
             // 
             // PorcentLabel
@@ -68,14 +71,15 @@
             PorcentLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             PorcentLabel.AutoSize = true;
             PorcentLabel.ForeColor = Color.White;
-            PorcentLabel.Location = new Point(472, 102);
+            PorcentLabel.Location = new Point(674, 170);
+            PorcentLabel.Margin = new Padding(4, 0, 4, 0);
             PorcentLabel.Name = "PorcentLabel";
-            PorcentLabel.Size = new Size(0, 15);
+            PorcentLabel.Size = new Size(0, 25);
             PorcentLabel.TabIndex = 3;
             // 
             // Video
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = Color.FromArgb(40, 20, 80);
@@ -83,8 +87,9 @@
             Controls.Add(progressBar);
             Controls.Add(picture);
             Controls.Add(Tag);
+            Margin = new Padding(4, 5, 4, 5);
             Name = "Video";
-            Size = new Size(515, 150);
+            Size = new Size(1154, 250);
             ((System.ComponentModel.ISupportInitialize)picture).EndInit();
             ResumeLayout(false);
             PerformLayout();

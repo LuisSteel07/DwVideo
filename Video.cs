@@ -2,6 +2,7 @@
 using ImageMagick;
 using YoutubeExplode;
 using YoutubeExplode.Common;
+using YoutubeExplode.Converter;
 using YoutubeExplode.Videos.Streams;
 using DwVideo.utils;
 
@@ -9,13 +10,18 @@ namespace DwVideo
 {
     public partial class Video : UserControl
     {
+        private string download_path;
+        private string type;
+        private string? resolution;
+        private IStreamInfo streamManifest;
+        private IStreamInfo videoStreamManifest;
+
         public async void Download()
         {
             string url = Tag.Text;
             var youtube = new YoutubeClient();
             var video = await youtube.Videos.GetAsync(url);
             var streamManifest = await youtube.Videos.Streams.GetManifestAsync(url);
-            var streamInfo = streamManifest.GetAudioStreams().GetWithHighestBitrate();
 
             var progress = new Progress<double>(p => {
                 ProgressValue = (int)Math.Floor(p * 100);
@@ -23,10 +29,61 @@ namespace DwVideo
             });
 
             TagText = video.Title;
-            await youtube.Videos.Streams.DownloadAsync(streamInfo, Path.Combine(download_path, $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp3"), progress);
-        }
 
-        private string download_path;
+            StreamManifest = streamManifest.GetAudioStreams().GetWithHighestBitrate();
+
+            if(type == "Audio")
+            {
+                await youtube.Videos.Streams.DownloadAsync(StreamManifest, Path.Combine(download_path, $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp3"), progress);
+            }
+            else if(type == "Video")
+            {
+                VideoStreamManifest = streamManifest
+                    .GetVideoStreams()
+                    .FirstOrDefault(s => s.VideoQuality.Label == resolution);
+
+                var rutaFFmpeg = Path.Combine($"{AppDomain.CurrentDomain.BaseDirectory}\\tools", "ffmpeg.exe");
+
+                var title_audio = $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp3";
+                var title_video = $"{ValidateName.LimpiarNombreArchivo(video.Title)}.mp4";
+
+                await youtube.Videos.Streams.DownloadAsync(
+                    StreamManifest,
+                    Path.Combine(download_path, title_audio)
+                    );
+
+                await youtube.Videos.Streams.DownloadAsync(
+                    VideoStreamManifest,
+                    Path.Combine(download_path, title_video), 
+                    progress
+                    );
+
+                string argumentos = $"-i \"{Path.Combine(download_path, title_video)}\" -i \"{Path.Combine(download_path, title_audio)}\" -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 \"download_{Path.Combine(download_path, title_video)}\"";
+
+                Thread convertion = new Thread(() =>
+                {
+                    var proceso = new System.Diagnostics.Process
+                    {
+                        StartInfo = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = rutaFFmpeg,
+                            Arguments = argumentos,
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = false
+                        }
+                    };
+
+                    proceso.Start();
+
+                    File.Delete(title_video);
+                    File.Delete(title_audio);
+                });
+
+                convertion.IsBackground = true;
+                convertion.Start();
+            }
+        }
 
         private async void LoadThumbnailAsync(string videoUrl)
         {
@@ -55,10 +112,12 @@ namespace DwVideo
             }
         }
 
-        public Video(string url, string download_path)
+        public Video(string url, string download_path, string _type = "Video", string? _resolution = null)
         {
             InitializeComponent();
             DownloadPath = download_path;
+            Type = _type;
+            Resolution = _resolution;
             LoadThumbnailAsync(url);
         }
 
@@ -96,6 +155,42 @@ namespace DwVideo
         {
             get => download_path;
             set => download_path = value;
+        }
+
+        [Category("Comportamiento")]
+        [Description("Establece o obtiene el tipo de archivo a descargar.")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string Type
+        {
+            get => type;
+            set => type = value;
+        }
+
+        [Category("Comportamiento")]
+        [Description("Establece o obtiene la resolucion en caso de ser un video.")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string? Resolution
+        {
+            get => resolution;
+            set => resolution = value;
+        }
+
+        [Category("Comportamiento")]
+        [Description("Establece o obtiene el manifiesto del stream.")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IStreamInfo StreamManifest
+        {
+            get => streamManifest;
+            set => streamManifest = value;
+        }
+
+        [Category("Comportamiento")]
+        [Description("Establece o obtiene el manifiesto del stream del video.")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IStreamInfo VideoStreamManifest
+        {
+            get => videoStreamManifest;
+            set => videoStreamManifest = value;
         }
     }
 }
