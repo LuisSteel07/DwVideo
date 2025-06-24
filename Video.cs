@@ -5,6 +5,7 @@ using YoutubeExplode.Common;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos.Streams;
 using DwVideo.utils;
+using System.Timers;
 
 namespace DwVideo
 {
@@ -60,7 +61,7 @@ namespace DwVideo
 
                 var input_video = Path.Combine(download_path, title_video);
                 var input_audio = Path.Combine(download_path, title_audio);
-                var output = Path.Combine(download_path, $"output_{title_video}");
+                var output = Path.Combine(download_path, $"{ValidateName.LimpiarNombreArchivo(video.Title)}_{resolution}.mp4");
 
                 string argumentos = $"-i \"{input_video}\" -i \"{input_audio}\" -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 \"{output}\"";
 
@@ -77,6 +78,10 @@ namespace DwVideo
                 };
 
                 proceso.Start();
+                proceso.WaitForExit();
+
+                File.Delete(input_audio);
+                File.Delete(input_video);
             }
         }
 
