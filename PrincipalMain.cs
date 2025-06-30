@@ -1,4 +1,7 @@
 using System.ComponentModel;
+using System.Threading.Tasks;
+using YoutubeExplode;
+using YoutubeExplode.Videos;
 
 namespace DwVideo
 {
@@ -40,21 +43,47 @@ namespace DwVideo
             confirm_down.IsBackground = true;
             confirm_down.Start();
         }
-
-        private void Search_Click(object sender, EventArgs e)
+        private async void Search_Click(object sender, EventArgs e)
         {
             Search.Enabled = false;
             if (search_input.Text != "")
             {
-                Video video_component = new Video(search_input.Text, DownloadPathControl, TypeOption.SelectedItem.ToString(), ResolutionOption.SelectedItem.ToString())
+                if (search_input.Text.Contains("playlist"))
                 {
-                    TagText = search_input.Text,
-                    DownloadPath = DownloadPathControl
-                };
+                    var youtube = new YoutubeClient();
+                    List<Video> videos = [];
 
-                activities.Controls.Add(video_component);
-                confirm_download(video_component);
-                video_component.Download();
+                    await foreach(var video in youtube.Playlists.GetVideosAsync(search_input.Text))
+                    {
+                        string url_video = $"{search_input.Text}&index={video.PlaylistId}";
+                        videos.Add(
+                            new Video(url_video, DownloadPathControl, TypeOption.SelectedItem.ToString(), ResolutionOption.SelectedItem.ToString())
+                            {
+                                TagText = url_video,
+                                DownloadPath = DownloadPathControl
+                            }
+                            );
+
+                    }
+
+                    foreach (var video in videos)
+                    {
+                        activities.Controls.Add(video);
+                        confirm_download(video);
+                        video.Download();
+                    }
+                    
+                } else
+                {
+                    Video video_component = new Video(search_input.Text, DownloadPathControl, TypeOption.SelectedItem.ToString(), ResolutionOption.SelectedItem.ToString())
+                    {
+                        TagText = search_input.Text,
+                        DownloadPath = DownloadPathControl
+                    };
+                    activities.Controls.Add(video_component);
+                    confirm_download(video_component);
+                    video_component.Download();
+                }
             }
             else
             {
